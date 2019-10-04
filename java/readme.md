@@ -32,12 +32,12 @@ In general the pattern to run any client is:
 Configuration configuration = ConfigurationLoader.load();
 
 // users resource
-UsersRestClient usersClient = new UsersClient(configuration);
-List<User> users = client.getAllUsers();
+UsersRestClient usersClient = new UsersRestClient(configuration);
+List<User> users = usersClient.getAllUsers();
 
 // groups resource
-GroupsRestResource groupsClient = new GroupsClient(configuration);
-List<Group> groups = client.getAllGroups();
+GroupsRestClient groupsClient = new GroupsRestClient(configuration);
+List<Group> groups = groupsClient.getAllGroups();
 ```
 
 We recommend the usage of an IDE to run those tests (the project has to be imported as Gradle Project). 
