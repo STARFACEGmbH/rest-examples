@@ -8,24 +8,24 @@ We use the following technologies to issue and parse requests:
 * [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/) to create SHA-512 hashes
 
 ### How to use the client?
- All the relevant client code is located under _src/main/java_ and is packaged by each resource. 
- In order to initiate a client class, you would need a configuration object.
- This object will contain all the necessary data to perform the login and obtain a token. 
+All the relevant client code is located under _src/main/java_ and each resource has its own package. 
+In order to initiate a client class, you would need a configuration object.
+This object will contain all the necessary data to perform the login and obtain a token. 
  
  
 #### Prepare the configuration
-This can be obtained via the _ConfigurationLoader_:
+The configuration can be obtained via the _ConfigurationLoader_:
  
 ```$java
 Configuration configuration = ConfigurationLoader.load();
 ```
 
-The loader will then pick up all the relevant information from the _configuration.json_ file located at _src/resources_.
+The loader will pick up all the relevant information from the _configuration.json_ file located at _src/resources_.
 There is an example of a configuration file that you can rename and complete.
 
 #### Examples per resource
 Once you completed the _configuration.json_ you can already start using the examples under _src/test/java_.
-Those examples demonstrate the basic usage of the APIs, but won't modify any resources!
+Those examples demonstrate the basic usage of the APIs, but won't modify any existing resources!
 
 In general the pattern to run any client is:
 ```$java
