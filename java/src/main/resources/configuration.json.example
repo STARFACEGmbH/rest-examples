@@ -1,0 +1,7 @@
+{
+  "pbxBaseUrl": "the URL to the STARFACE appliance e.g. http://192.0.0.1 or https://starface.yourdomain.com",
+  "admin": {
+    "username": "the user name of the Admin e.g. 0001",
+    "password": "your password"
+  }
+}

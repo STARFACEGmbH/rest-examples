@@ -6,6 +6,9 @@
 # tools
 .gradle/
 
+# configuration
+configuration.json
+
 # build outputs
 build/
 out/
