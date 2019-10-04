@@ -20,8 +20,6 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform {
-        includeEngines 'spek2', 'junit-jupiter'
-    }
+    useJUnitPlatform()
 }
 
