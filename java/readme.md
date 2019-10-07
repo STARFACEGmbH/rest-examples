@@ -37,7 +37,7 @@ List<User> users = usersClient.getAllUsers();
 
 // groups resource
 GroupsRestClient groupsClient = new GroupsRestClient(configuration);
-List<Group> groups = groupsClient.getAllGroups();
+List<GroupOverview> groups = groupsClient.getAllGroups();
 ```
 
 We recommend the usage of an IDE to run those tests (the project has to be imported as Gradle Project). 

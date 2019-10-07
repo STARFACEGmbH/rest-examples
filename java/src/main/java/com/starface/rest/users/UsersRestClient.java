@@ -27,23 +27,23 @@ public class UsersRestClient {
     }
 
     public void createUser(CreateUserRequest newUser) throws IOException {
-        Request createUser = new Request.Builder()
+        Request createUserRequest = new Request.Builder()
                 .post(RequestBody.create(configuration.getObjectMapper().writeValueAsBytes(newUser)))
                 .addHeader("Content-Type", "application/json")
                 .url(configuration.getPbxBaseUrl() + "/rest/users")
                 .build();
 
-        configuration.getOkHttpClient().newCall(createUser).execute();
+        configuration.getOkHttpClient().newCall(createUserRequest).execute();
     }
 
     public void deleteUser(int userId) throws IOException {
-        Request createUser = new Request.Builder()
+        Request deleteUserRequest = new Request.Builder()
                 .delete()
                 .addHeader("Content-Type", "application/json")
                 .url(configuration.getPbxBaseUrl() + "/rest/users/" + userId)
                 .build();
 
-        configuration.getOkHttpClient().newCall(createUser).execute();
+        configuration.getOkHttpClient().newCall(deleteUserRequest).execute();
     }
 
 }
