@@ -3,6 +3,7 @@
 namespace Starface\REST;
 
 use HttpRequestMethodException;
+use Starface\Utils\HttpContentType;
 use Starface\Utils\HttpMethod;
 
 /**
@@ -35,7 +36,7 @@ class RestBasicClient
         $this->setCurlOption(CURLOPT_RETURNTRANSFER, true);
         // set default content type to json:
         $this->setCurlOption(CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json; charset=utf-8',
+            'Content-Type: ' . HttpContentType::APPLICATION_JSON . '; charset=utf-8',
         ));
     }
     
