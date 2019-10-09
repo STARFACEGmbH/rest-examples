@@ -65,6 +65,9 @@ try {
     // $installedUsers = $client->get("/users");
     // var_dump($installedUsers);
     
+    // logout:
+    $client->delete("/login"); // invalidates authToken
+    
 } catch (Exception $e) {
     
     echo "Login failed: {$e->getMessage()}  (HTTP {$client->getLastRequestsHttpStatus()})";
@@ -72,5 +75,6 @@ try {
 } finally {
     
     $client->closeConnection();
+    unset($client);
     
 }
