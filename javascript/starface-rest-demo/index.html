@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="charset" content="UTF-8">
+    <title>STARFACE</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="sf-config.js"></script>
+</head>
+<body>
+<div id="app">
+    <div id="login" class="view">
+        <form autocomplete="off">
+            <fieldset>
+                <legend><b>Login</b></legend>
+                <p>
+                    <input placeholder="Login ID | Username"
+                           autofocus disabled  required>
+                </p>
+                <p>
+                    <input placeholder="Password"
+                           type="password"
+                           autocomplete="new-password"
+                           disabled required>
+                </p>
+            </fieldset>
+            <button disabled>Ok</button>
+        </form>
+    </div>
+    <div id="contents" class="view">
+        <div id="menu">
+            <button type="button" disabled id="me">Preferences</button>
+            <button type="button" disabled id="users">Users</button>
+            <button type="button" disabled id="logout">Logout</button>
+        </div>
+        <div id="output">Welcome</div>
+    </div>
+    <textarea readonly id="message"></textarea>
+    <noscript>
+        <div id="imprint">
+            <p>Please enable Javascript!</p>
+        </div>
+    </noscript>
+</div>
+<script type="text/javascript" src="/starface-rest-demo/js/chunk-vendors.fcbd4373.js"></script><script type="text/javascript" src="/starface-rest-demo/js/app.7f36f74d.js"></script></body>
+</html>

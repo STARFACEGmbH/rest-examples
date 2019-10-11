@@ -1,0 +1,140 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic,500,500italic,700,700italic);
+@import url(https://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,600italic,700);
+
+body, html {
+	background-color: #fff;
+	border: 0;
+	font-size: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	width: 100%;
+}
+
+div, fieldset, footer, h1, h2, h3, h4, h5, h6, header, legend, li, nav, p, pre, section, select, table, tbody, td, thead, tfoot, tr, ul {
+	border: 0;
+	font: normal normal 400 1em/normal "Roboto Condensed", sans-serif;
+	color: inherit;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	vertical-align: top;
+}
+
+ul {
+	list-style-type: none;
+}
+
+/**
+ * Correct `block` display not defined for any HTML5 element in IE 8/9.
+ * Correct `block` display not defined for `details` or `summary` in IE 10/11
+ * and Firefox.
+ * Correct `block` display not defined for `main` in IE 11.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+	display: block;
+}
+
+:focus {
+  outline-color: #f59b00;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+table {
+	empty-cells: show;
+	height: 100%;
+	max-height: inherit;
+	min-height: inherit;
+	width: 100%;
+}
+
+a:hover,
+button:hover,
+.avatar:hover {
+	opacity: .7;
+}
+
+input, textarea {
+	border-color: initial !important;
+	border-style: solid !important;
+	border-width: 1px !important;
+	padding: .3rem;
+}
+
+#app button {
+	margin: 10px 0 10px auto;
+}
+
+#contents, #login, #output {
+	margin: 1em auto;
+}
+
+#contents, #login, #message {
+	display: none;
+}
+
+#message.show {
+	display: block;
+	left: 25%;
+	max-width: 50%;
+	min-width: 50%;
+	position: absolute;
+	top: 25%;
+}
+
+.signoff #contents {
+	display: flex;
+}
+
+#output,
+.signon #login {
+	display: table;
+}
+
+#login p {
+	display: inline-grid;
+}
+
+#menu {
+	padding: 0 1em;
+}
+
+#selfAvatar {
+	padding-bottom: 1em;
+}
+
+.edit, .remove {
+	display: none;
+}
+
+.avatar {
+	background: transparent none no-repeat;
+	display: block;
+	height: 32px;
+	width: 32px;
+	background-size: cover;
+}
+
+.avatar.initial {
+	background-image: url("data:image/gif;base64,R0lGODlhIAAgAMQAANXV1dbW1uDg4NjY2OPj49fX1+Hh4dra2tvb2+Li4t7e3t/f393d3dzc3NnZ2dPT0+Xl5dTU1OTk5AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAALAAAAAAgACAAAAX/oARJImmWJDSeqbmurDiqMQujdXvLON26Px4uSMwNSQSDgWAEDlUrAiMQqT4AB4KvNnNKDICqWAxQxHanVSI8bkcEwBeaNHg83JF7JNB0QhZ5enhVC0dnIgh2bneKEQhNLyRUg4xVA303bIKLEQVeORBUm4Oecz0SB5RtCDemJAKDbnBpWzEFsWKXKF1EKrB4grO1RioDeYO6NmnLEL9WbQbEvSmTbnzK0ibGiwfDh7wQBNVtnoc/OwbGo2JZn1sQCQoHoutjAAMNAkzLCg5sY/UAWimAIJqEBLc4cWo06kEBAeNUxdJjxw6Af8AatamnByOuiR8VigmIR5PIkM8iAwAIAQA7") !important;
+}

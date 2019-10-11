@@ -1,0 +1,26 @@
+{
+  "name": "starface-rest-demo",
+  "version": "1.0.0",
+  "description": "A REST API web client example for STARFACE PBX",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/STARFACEGmbH/rest-examples.git",
+    "path": "javascript"
+  },
+  "homepage": "https://github.com/STARFACEGmbH/rest-examples/javascript",
+  "private": true,
+  "devDependencies": {
+    "@vue/cli-service": "^3.11.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "scripts": {
+    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve --host localhost --port 8008 --open"
+  },
+  "dependencies": {
+    "jquery": "^3",
+    "js-sha512": "^0.8.0",
+    "lodash": "^4.17.15",
+    "starface-rest-api": "file:src/starface-rest-api"
+  }
+}

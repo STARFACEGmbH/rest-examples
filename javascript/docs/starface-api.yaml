@@ -1,0 +1,3890 @@
+swagger: '2.0'
+info:
+    version: 6.7.0.22
+    title: STARFACE Rest Api
+    description: A Rest API for STARFACE
+    termsOfService: https://www.starface.com/agb/
+    license:
+        name: STARFACE proprietary license
+        url: http://www.starface.com
+consumes:
+- application/json
+produces:
+- application/json
+schemes:
+- https
+- http
+tags:
+    -   name: Call Services
+        description: Interface for the available call services
+    -   name: Conferences
+        description: Interface for conferences
+    -   name: Contacts
+        description: Interface for contacts
+    -   name: Function keys
+        description: Interface for the function keys
+    -   name: Groups
+        description: Interface for groups
+    -   name: iFMC
+        description: Interface for the iFMC devices
+    -   name: Login
+        description: Interface for authentication
+    -   name: Permissions
+        description: Interface for permissions
+    -   name: Phone Numbers
+        description: Interface for telephone numbers
+    -   name: Redirects
+        description: Interface for redirects
+    -   name: Users
+        description: Interface for users
+    -   name: Voicemail Boxes
+        description: Interface for voicemail boxes
+paths:
+    /accounts:
+        get:
+            tags:
+                -   Users
+            operationId: getAccountsList
+            summary: Retrieve a list of accounts
+            description: Retrieve a list of accounts.
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Account'
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phoneconfig/phones:
+        post:
+            tags:
+                -   Users
+            operationId: assignPhone
+            summary: Assignes a phone to the User
+            description: Assigns a phone to the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: PhoneAssignment
+                in: body
+                description: phoneAssignment
+                required: true
+                schema:
+                    $ref: '#/definitions/PhoneAssignment'
+            responses:
+                201:
+                    description: Created. The phone has successfully been assigned to the User with the given {userId}
+                200:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Users
+            operationId: listAssignedPhones
+            summary: Fetches a list of assigned phones
+            description: Fetches a list of assigned phones for the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning a list of assigned phones for the User with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneAssignment'
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phonenumberconfig/phonenumbers/:
+        post:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: assignPhoneNumber
+            summary: Assigns phone numbers to the User
+            description: Assigns phone numbers to the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneNumberAssignments
+                in: body
+                description: A List of PhoneNumberAssignment-Objects
+                required: true
+                schema:
+                    type: array
+                    items:
+                                        $ref: '#/definitions/PhoneNumberAssignment'
+            responses:
+                200:
+                    description: OK. The phone numbers have successfully been assigned to the User with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneNumberAssignment'
+                400:
+                    description: Request error
+                    schema:
+                        type: string
+                500:
+                    description: Server error
+                    schema:
+                        type: string
+        get:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: listPhoneNumberAssignment
+            summary: Fetches a list of assigned phone numbers
+            description: Fetches a list of assigned phone numbers for the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning a list of assigned phone numbers for the User with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneNumberAssignment'
+                400:
+                    description: Unexpected error
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneNumberAssignment'
+                500:
+                    description: Unexpected error.
+    /users/{userId}/avatar:
+        delete:
+            tags:
+                -   Users
+            operationId: deleteAvatar
+            summary: Delete the Avatar
+            description: Delete the Avatar of the user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User thats avatar will be updated
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The Avatar of the User with the given {userId} has successfully been deleted
+                404:
+                    description: Not Found. An User with the given {userId} was not found
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Users
+            operationId: getAvatar
+            summary: Fetch the Avatar
+            description: Fetch the Avatar of the user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - image/png
+            - image/jpeg
+            - image/gif
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User thats avatar will be fetched
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. Returning the Avatar of the User with the given {userId}
+                    schema:
+                        type: string
+                        format: binary
+                404:
+                    description: Not Found. An User with the given {userId} was not found
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Users
+            operationId: putAvatar
+            summary: Set the Avatar
+            description: Set the Avatar of the user with the given {userId}
+            consumes:
+            - image/png
+            - image/jpeg
+            - image/gif
+            produces:
+            - application/json
+            parameters:
+            -   name: image
+                in: body
+                description: Image png 
+                required: true
+                schema:
+                        type: string
+                        format: binary
+            -   name: userId
+                in: path
+                description: Id of the User thats avatar will be updated
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The Avatar of the User with the given {userId} has successfully been set
+                404:
+                    description: Not Found. An User with the given {userId} was not found
+                500:
+                    description: Unexpected error.
+    /users/{userId}/managedConferences/{conferenceId}:
+        delete:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: deleteManagedConference
+            summary: Delete a managed conference
+            description: Delete the managed conference with the given {conferenceId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: conferenceId
+                in: path
+                description: Id of the conference
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: OK. The managed conference with the given conferenceId {conferenceId} has successfully been deleted
+                403:
+                    description: User not allowed to make this change
+                404:
+                    description: No managed conference with the given conferenceId {conferenceId} could be found
+                500:
+                    description: Unexpected error
+        get:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: getManagedConference
+            summary: Fetch ManagedConference
+            description: Fetch the ManagedConference of the User with the given {userId} and {conferenceId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: conferenceId
+                in: path
+                description: Id of the conference
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: A configured managed conference
+                    schema:
+                        $ref: '#/definitions/ManagedConference'
+                404:
+                    description: No managed conference with the given conferenceId {conferenceId} could be found
+                401:
+                    description: User with the given {userId} does not exist or the user not allowed to make this operation
+                500:
+                    description: Unexpected error
+        put:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: putManagedConference
+            summary: Update ManagedConference
+            description: Update the ManagedConference of the User with the given {userId} and {conferenceId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: conferenceId
+                in: path
+                description: Id of the conference
+                required: true
+                type: integer
+            -   name: conference
+                in: body
+                description: ManagedConference-Object with updated values that should be applied
+                required: true
+                schema:
+                    $ref: '#/definitions/ManagedConference'
+            responses:
+                204:
+                    description: OK. The managed conference with the given {conferenceId} has successfully been updated
+                404:
+                    description: No managed conference with the given conferenceId {conferenceId} could be found
+                401:
+                    description: User with the given userId {userId} does not exist or the user not allowed to make this change
+                400:
+                    description: Validation error
+                500:
+                    description: Unexpected error
+    /users/{userId}/phoneconfig/phones/{phoneId}:
+        delete:
+            tags:
+                -   Users
+            operationId: deletePhoneAssignment
+            summary: Deletes the PhoneAssignment
+            description: Deletes the PhoneAssignment from the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneId
+                in: path
+                description: Id of a phone
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The phone with the given {phoneId} has successfully been unassigned from the User
+                200:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Users
+            operationId: getPhoneAssignment
+            summary: Fetches the PhoneAssignment
+            description: Fetches the PhoneAssignment for the corresponding {phoneId} of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneId
+                in: path
+                description: Id of a phone
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning the PhoneAssignment for the corresponding {phoneId} of the User with the given {userId}
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phonenumberconfig/phonenumbers/{phoneNumberId}:
+        delete:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: deletePhoneNumberAssignment
+            summary: Deletes the PhoneNumberAssignment
+            description: Deletes the PhoneNumberAssignment from the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneNumberId
+                in: path
+                description: Id of the PhoneNumber that gets unassigned from the User with the given {userId}
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The PhoneNumber with the given {phoneNumberId} has successfully been unassigned from the User
+                400:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: getPhoneNumberAssignment
+            summary: Fetches the PhoneNumberAssignment
+            description: Fetches the PhoneNumberAssignment for the corresponding {phoneNumberId} of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneNumberId
+                in: path
+                description: Id of the PhoneNumber thats is assigned to the User with the given {userId}
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning the PhoneNumberAssignment for the corresponding {phoneNumberId} of the User with the given {userId}
+                    schema:
+                        $ref: '#/definitions/PhoneNumberAssignment'
+                400:
+                    description: Unexpected error
+                    schema:
+                        $ref: '#/definitions/PhoneNumberAssignment'
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phonenumberconfig/phonenumbers/delete:
+        post:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: deletePhoneNumberAssignments
+            summary: Deletes the PhoneNumberAssignments
+            description: Deletes the PhoneNumberAssignments from the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneNumberAssignments
+                in: body
+                description: A List of PhoneNumberAssignment-Objects
+                required: true
+                schema:
+                    type: array
+                    items:
+                                        $ref: '#/definitions/PhoneNumberAssignment'
+            responses:
+                204:
+                    description: No Content. The PhoneNumbers have successfully been unassigned from the User
+                400:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+    /users/{userId}:
+        delete:
+            tags:
+                -   Users
+            operationId: deleteUser
+            summary: Delete a user
+            description: Delete the STARFACE user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User that will be deleted
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The User with the given {userId} has successfully been deleted
+                404:
+                    description: Not Found. An User with the given {userId} was not found
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Users
+            operationId: getUser
+            summary: Fetch a user
+            description: Fetch the STARFACE user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User that will be fetched
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. Returning the User object with the given {userId}
+                    schema:
+                        $ref: '#/definitions/User'
+                404:
+                    description: Not Found. A User with the given {userId} was not found
+                    schema:
+                        $ref: '#/definitions/User'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Users
+            operationId: putUser
+            summary: Update a user
+            description: Update the STARFACE user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User that will be updated
+                required: true
+                type: integer
+            -   name: user
+                in: body
+                description: User-Object with updated values that should be applied
+                required: true
+                schema:
+                    $ref: '#/definitions/User'
+            responses:
+                204:
+                    description: No Content. The User with the given {userId} has successfully been updated
+                404:
+                    description: Not Found. A User with the given {userId} was not found
+                500:
+                    description: Unexpected error.
+    /users/{userId}/managedConferences:
+        get:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: getManagedConferenceList
+            summary: Fetch ManagedConferenceSummaryList
+            description: Fetch the ManagedConferenceSummaryList of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: page
+                in: query
+                description: The page number for this request. This parameter is 0-indexed. Value 0 returns the first page
+                required: false
+                type: integer
+            -   name: pagesize
+                in: query
+                description: The page size to use. Default is 20.
+                required: false
+                type: integer
+            -   name: sort
+                in: query
+                description: The fieldname to sort for.
+                required: false
+                type: string
+            -   name: sortdirection
+                in: query
+                description: The sort direction. 'ASC' for ascending, 'DESC' for descending
+                required: false
+                type: string
+            responses:
+                200:
+                    description: A list of configured managed conferences
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/ManagedConferenceSummary'
+                400:
+                    description: The sortdirection parameter contains an invalid value
+                500:
+                    description: Unexpected error
+        post:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: postManagedConference
+            summary: Create a new managed conference
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: conference
+                in: body
+                description: Managed conference object to be created
+                required: true
+                schema:
+                    $ref: '#/definitions/ManagedConference'
+            responses:
+                201:
+                    description: The conference has successfully been created
+                400:
+                    description: Validation error
+                500:
+                    description: Unexpected error
+    /users/{userId}/phoneconfig/phones/{phoneId}/numbers:
+        get:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: getNumbersForAssignedPhone
+            summary: Fetches a list of NumberForPhoneAssignment
+            description: Fetches a list of NumberForPhoneAssignment of the User with the given {userId} and the Phone with the given {phoneId}.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneId
+                in: path
+                description: Id of a phone
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning a list of assigned numbers to the assigned phone with the given {phoneId} for the User with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/NumberForPhoneAssignment'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: updateNumbersForAssignedPhones
+            summary: Updates the list of NumberForPhoneAssignment
+            description: Updates the list of NumberForPhoneAssignment of the User with the given {userId} and the Phone with the given {phoneId}. Only the active-flag can be changed. Elements in the list cannot be added or removed.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneId
+                in: path
+                description: Id of a phone
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: No Content. The list of assigned numbers to the assigned phone with the given {phoneId} has been updated successfully.
+                200:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phoneconfig:
+        get:
+            tags:
+                -   Users
+            operationId: getPhoneConfig
+            summary: Fetch the PhoneConfig
+            description: Fetch the PhoneConfig of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning the PhoneConfig of the User with the given {userId}
+                    schema:
+                        $ref: '#/definitions/PhoneConfig'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Users
+            operationId: putPhoneConfig
+            summary: Update the PhoneConfig
+            description: Update the PhoneConfig of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneConfig
+                in: body
+                description: phoneConfig to update
+                required: true
+                schema:
+                    $ref: '#/definitions/PhoneConfig'
+            responses:
+                204:
+                    description: No Content. The PhoneConfig has been successfully been updated
+                200:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+    /users/{userId}/phonenumberconfig:
+        get:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: getPhoneNumberConfig
+            summary: Fetch the PhoneNumberConfig
+            description: Fetch the PhoneNumberConfig of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: Ok. Returning the PhoneNumberConfig of the User with the given {userId}
+                    schema:
+                        $ref: '#/definitions/PhoneNumberConfig'
+                500:
+                    description: Unexpected error
+                    schema:
+                        $ref: '#/definitions/PhoneNumberConfig'
+        put:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: putPhoneNumberConfig
+            summary: Update the PhoneNumberConfig
+            description: Update the PhoneNumberConfig of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User thats PhoneNumberConfig will be updated
+                required: true
+                type: integer
+            -   name: phoneNumberConfig
+                in: body
+                description: PhoneNumberConfig-Object with updated values that should be applied
+                required: true
+                schema:
+                    $ref: '#/definitions/PhoneNumberConfig'
+            responses:
+                200:
+                    description: Ok. Returning the PhoneNumberConfig of the User with the given {userId}
+                    schema:
+                        $ref: '#/definitions/PhoneNumberConfig'
+                500:
+                    description: Unexpected error
+                    schema:
+                        type: string
+    /users:
+        get:
+            tags:
+                -   Users
+            operationId: getUsers
+            summary: Retrieve a list of users
+            description: Retrieve a list of STARFACE users the current user can access.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: searchTerm
+                in: query
+                description: The searchTerm to query users.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK. A list of accessable User
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/User'
+                500:
+                    description: Unexpected error.
+        post:
+            tags:
+                -   Users
+            operationId: postUser
+            summary: Create a new user
+            description: Create a new STARFACE user
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: user
+                in: body
+                description: User object to add
+                required: true
+                schema:
+                    $ref: '#/definitions/User'
+            responses:
+                201:
+                    description: Created.  User has successfully been created
+                200:
+                    description: Unexpected error
+                500:
+                    description: Unexpected error.
+    /users/{userId}/managedConferences/{conferenceId}/start:
+        put:
+            tags:
+                -   Conferences
+                -   Users
+            operationId: startManagedConference
+            summary: Start ManagedConference
+            description: Start the ManagedConference of the User with the given {userId} and {conferenceId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the user
+                required: true
+                type: integer
+            -   name: conferenceId
+                in: path
+                description: Id of the conference
+                required: true
+                type: integer
+            -   name: phoneName
+                in: query
+                description: The name of the phone to enter the conference. If empty the given phonenumber is used
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK. The managed conference with the given conferenceId {conferenceId} has successfully been started
+                400:
+                    description: The managed conference with the given conferenceId {conferenceId} is already finished
+                404:
+                    description: No managed conference with the given conferenceId {conferenceId} could be found
+                500:
+                    description: Unexpected error
+    /users/{userId}/phonenumberconfig/phonenumbers:
+        put:
+            tags:
+                -   Phone Numbers
+                -   Users
+            operationId: updatePhoneNumberAssignments
+            summary: Update PhoneNumberAssignments of the User
+            description: Update the PhoneNumberAssignment with the given {phoneNumberId} of the User with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: phoneNumberAssignments
+                in: body
+                description: A List of PhoneNumberAssignment-Objects
+                required: true
+                schema:
+                    type: array
+                    items:
+                                        $ref: '#/definitions/PhoneNumberAssignment'
+            responses:
+                200:
+                    description: Ok. Returning a list of assigned phone numbers for the User with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneNumberAssignment'
+                500:
+                    description: Unexpected error
+                    schema:
+                        type: string
+    /users/me:
+        get:
+            tags:
+                -   Users
+            operationId: usersMeGet
+            summary: Get own user
+            description: endpoint alias for /users/{userId} of the user that is corrently logged in
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            responses:
+                200:
+                    description: OK. Returning the User object of the user that is corrently logged in
+                    schema:
+                        $ref: '#/definitions/User'
+                500:
+                    description: Unexpected error.
+    /login:
+        get:
+            tags:
+                -   Login
+            operationId: getLogin
+            summary: Get a template Login-Object filled with loginType and nonce
+            description: This endpoint returns a template of an Login-Object that proviedes the loginType required by the Server and a nonce. The template Login-Object can then be used to authorize a user by sending a POST-Request to this endpoint providing the users secret. See the description of this endpoind's POST-Request on how to derive the secret from a users loginId and password.
+            responses:
+                200:
+                    description: A template Login-Object
+                    schema:
+                        $ref: '#/definitions/Login'
+                500:
+                    description: Unexpected error
+                    schema:
+                        $ref: '#/definitions/Login'
+        post:
+            tags:
+                -   Login
+            operationId: login
+            summary: Login to the Rest-Service
+            description: This endpoint is used to login to the STARFACE Rest-Service. By providing a template Login-Object from this endpoints GET-Request with the users secret. If the loginType is INTERNAL the secret can be calculated with <login>:SHA512(<loginId><nonce>SHA512(<password>)). For loginType ACTIVE_DIRECTORY the secret will be BASE64(loginId+nonce+password). For security reasons it's recommended to use HTTPS over HTTP for the login. The returned token must then be used in a HTTP header paramether named "authToken" in order to use this login.
+            parameters:
+            -   name: login
+                in: body
+                description: Login-Object with the users secret.
+                required: true
+                schema:
+                    $ref: '#/definitions/Login'
+            responses:
+                200:
+                    description: login was successful, returning the users authToken
+                    schema:
+                        $ref: '#/definitions/AuthToken'
+                400:
+                    description: invalid login
+                    schema:
+                        $ref: '#/definitions/AuthToken'
+                500:
+                    description: Unexpected error
+                    schema:
+                        $ref: '#/definitions/AuthToken'
+        delete:
+            tags:
+                -   Login
+            operationId: logout
+            summary: invalidate the provided authToken.
+            description: User for the given authToken will be logged out. The authToken will be invalidated
+            parameters:
+            -   name: authToken
+                in: header
+                description: the authToken to check
+                required: true
+                type: string
+            responses:
+                204:
+                    description: If a valid authToken was provided it has just been invalidated
+                500:
+                    description: Unexpected error
+    /redirects:
+        get:
+            tags:
+                -   Redirects
+            operationId: getRedirects
+            summary: Retrieve a list of redirects
+            description: Retrieve a list of redirects for the current user.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: A list of available redirects
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Redirection'
+                500:
+                    description: Unexpected error.
+    /redirects/{redirectId}:
+        get:
+            tags:
+                -   Redirects
+            operationId: redirectsRedirectIdGet
+            summary: Fetch a Redirection
+            description: Fetch the Redirection with the given {redirectId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: redirectId
+                in: path
+                description: Id of the Redirection that will be fetched
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK. Returning the Redirection object with the given {redirectId}
+                    schema:
+                        $ref: '#/definitions/Redirection'
+                404:
+                    description: Not Found. A Redirection with the given {redirectId} was not found
+                    schema:
+                        $ref: '#/definitions/Redirection'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Redirects
+            operationId: redirectsRedirectIdPut
+            summary: Update a Redirection
+            description: Update the Redirection with the given {redirectId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: redirectId
+                in: path
+                description: Id of the Redirection that will be updated
+                required: true
+                type: string
+            -   name: redirection
+                in: body
+                description: Redirection-Object with updated values that should be applied
+                required: true
+                schema:
+                    $ref: '#/definitions/Redirection'
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK. The Redirection with the given {redirectId} has successfully been updated
+                404:
+                    description: Not Found. A Redirection with the given {redirectId} was not found
+                    schema:
+                        $ref: '#/definitions/Redirection'
+                200:
+                    description: Unexpected error
+                    schema:
+                        $ref: '#/definitions/Redirection'
+                500:
+                    description: Unexpected error.
+    /phonenumbers/{phoneNumberId}:
+        get:
+            tags:
+                -   Phone Numbers
+            operationId: getPhoneNumber
+            summary: Fetch a PhoneNumber
+            description: Fetch the PhoneNumber with the given {phoneNumberId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: phoneNumberId
+                in: path
+                description: Id of the PhoneNumber that will be fetched
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. Returning the PhoneNumber object with the given {phoneNumberId}
+                    schema:
+                        $ref: '#/definitions/PhoneNumber'
+                404:
+                    description: Not Found. A PhoneNumber with the given {phoneNumberId} was not found
+                    schema:
+                        $ref: '#/definitions/PhoneNumber'
+                500:
+                    description: Unexpected error.
+    /phonenumbers:
+        get:
+            tags:
+                -   Phone Numbers
+            operationId: getPhoneNumbers
+            summary: Retrive a list of all configured PhoneNumbers
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: type
+                in: query
+                description: filter for the type of the PhoneNumber
+                required: false
+                type: string
+            -   name: assigned
+                in: query
+                description: filter for only assigned or unassigned PhoneNumbers
+                required: false
+                type: boolean
+            responses:
+                200:
+                    description: A list of available PhoneNumbers
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PhoneNumber'
+                500:
+                    description: Unexpected error.
+    /conferenceConfiguration:
+        get:
+            tags:
+                -   Conferences
+            operationId: getConferenceConfiguration
+            summary: Fetch default values for new managed conferences
+            description: Fetch the ConferenceConfiguration
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            responses:
+                200:
+                    description: The current setting of conference configuration
+                    schema:
+                        $ref: '#/definitions/ConferenceConfiguration'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Conferences
+            operationId: putConferenceConfiguration
+            summary: Update the Conference Configuration
+            description: Update the given conference configuration by the given {userId} 
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: query
+                description: Id of the User
+                required: true
+                type: integer
+            -   name: conferenceConfiguration
+                in: body
+                description: conferenceConfiguration
+                required: true
+                schema:
+                    $ref: '#/definitions/ConferenceConfiguration'
+            responses:
+                200:
+                    description: OK. The conference configuration has successfully been updated
+                400:
+                    description: Validation error
+                401:
+                    description: The user with the given account id {userId} does not have Administrator permission
+                404:
+                    description: An user with the given account id {userId} could not be found
+                500:
+                    description: Unexpected error
+    /conferenceConfiguration/defaults:
+        get:
+            tags:
+                -   Conferences
+            operationId: getDefaultTexts
+            summary: Fetch the texts for conference emails
+            description: Fetch the texts for conference emails
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: locale
+                in: query
+                description: locale for default text
+                required: false
+                type: string
+            responses:
+                200:
+                    description: ConferenceConfigurationTexts with default text in given locale
+                    schema:
+                        $ref: '#/definitions/ConferenceConfigurationTexts'
+                500:
+                    description: Unexpected error.
+    /functionkeysets/{fkSetId}/:
+        post:
+            tags:
+                -   Function keys
+            operationId: createFunctionKey
+            description: Creates a new FunctionKey and appends it to the end of the FunctionKeySet if no position is provided. Otherwise the Functionkey will shift other keys aside.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: functionKey
+                in: body
+                description: The new functionKey to create
+                required: true
+                schema:
+                    $ref: '#/definitions/FunctionKey'
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                201:
+                    description: The FunctionKey has successfully been created
+                    schema:
+                        $ref: '#/definitions/FunctionKey'
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Function keys
+            operationId: getFunctionKeys
+            description: Retrieve the list of FunctionKeys contained in the given FunctionKeySet.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: The list of contained FunctionKeys
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/FunctionKey'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Function keys
+            operationId: updateFunctionKeySet
+            description: Update the FunctionKeySet with the given {fkSetId}. This operation can be used to reorder the FunctionKeys contained in this set. NOTE keys on phones must be refreshed (GET /{fkSetId}/phones and PUT /{fkSetId}/phone).
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: functionKeys
+                in: body
+                description: The updated FunctionKeySet to reorder FunctionKeys
+                required: true
+                schema:
+                    type: array
+                    items:
+                                        $ref: '#/definitions/FunctionKey'
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                204:
+                    description: The FunctionKeySet with the given {fkSetId} has successfully been updated
+                400:
+                    description: The FunctionKeySet with the given {fkSetId} has not successfully been updated. Returns the positions of the bad functionkeys in the array
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/FunctionKeySetError'
+                500:
+                    description: Unexpected error.
+    /functionkeysets/{fkSetId}/{keyId}:
+        delete:
+            tags:
+                -   Function keys
+            operationId: deleteFunctionKey
+            description: Delete the FunctionKey with the given {keyId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: keyId
+                in: path
+                description: The Id of the FunctionKey
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                204:
+                    description: The FunctionKey with the given {keyId} has successfully been deleted
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Function keys
+            operationId: getFunctionKey
+            description: Fetch the FunctionKey with the given {keyId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: keyId
+                in: path
+                description: The Id of the FunctionKey
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: Returning the FunctionKey object with the given {keyId}
+                    schema:
+                        $ref: '#/definitions/FunctionKey'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Function keys
+            operationId: updateFunctionKey
+            description: Update the FunctionKey with the given {keyId}. NOTE keys on phones must be refreshed (GET /{fkSetId}/phones and PUT /{fkSetId}/phone).
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: keyId
+                in: path
+                description: The Id of the FunctionKey
+                required: true
+                type: string
+            -   name: functionKey
+                in: body
+                description: The new functionKey to create
+                required: true
+                schema:
+                    $ref: '#/definitions/FunctionKey'
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: The FunctionKey with the given {keyId} has successfully been updated
+                500:
+                    description: Unexpected error.
+    /functionkeysets/{fkSetId}/edit/{keyId}:
+        get:
+            tags:
+                -   Function keys
+            operationId: getEditFunctionKey
+            description: Returns edit informations for the given key {keyId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: keyId
+                in: path
+                description: The Id of the FunctionKey
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: Returning the EditFunctionKey object with the given {keyId}
+                    schema:
+                        $ref: '#/definitions/EditFunctionKey'
+                500:
+                    description: Unexpected error.
+    /functionkeysets/edit/defaults:
+        get:
+            tags:
+                -   Function keys
+            operationId: getEditFunctionKeyDefaults
+            description: Returns edit possible edit informations
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            responses:
+                200:
+                    description: Returning the EditFunctionKey of all possible keys
+                    schema:
+                        $ref: '#/definitions/EditFunctionKey'
+                500:
+                    description: Unexpected error.
+    /functionkeysets:
+        get:
+            tags:
+                -   Function keys
+            operationId: getFunctionKeySets
+            summary: Retrieve a list of FunctionKeySets
+            description: Retrieve a list of FunctionKeySets for the current user.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: A list of available FunctionKeySets
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/FunctionKeySet'
+                500:
+                    description: Unexpected error.
+    /functionkeysets/{fkSetId}/phones:
+        get:
+            tags:
+                -   Function keys
+            operationId: getPhonesForFunctionKeySet
+            description: Fetch the phones for functionkeyset with the given {fkSetId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: Returning the FunctionKey object with the given {keyId}
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                500:
+                    description: Unexpected error.
+    /functionkeysets/{fkSetId}/phone:
+        put:
+            tags:
+                -   Function keys
+            operationId: putFunctionKeySetOnPhone
+            description: Provisions a phone with the given function key set
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fkSetId
+                in: path
+                description: The Id of the FunctionKeySet
+                required: true
+                type: string
+            -   name: phone
+                in: query
+                description: The phone
+                required: true
+                type: string
+            -   name: actOnBehalfOf
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: Provisions a phone with the given function key set
+                400:
+                    description: Autoprovisioning is inactive; Phone {phone} was not yet Autoprovisioned
+                403:
+                    description: The phones Mac-Address is not authorized for Autoprovisioning
+                404:
+                    description: Account with the given {accountId} was invalid or not found; Phone {phone} was invalid or not found; No Configuration found for Phone {phone}
+                500:
+                    description: Unexpected error.
+    /fmcPhones/{fmcId}:
+        delete:
+            tags:
+                -   iFMC
+            operationId: deleteFmcPhone
+            summary: Delete a FmcPhone
+            description: Delete the FmcPhone with the given {fmcId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fmcId
+                in: path
+                description: Id of the FmcPhone that will be deleted
+                required: true
+                type: string
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK. The FmcPhone with the given {fmcId} has successfully been deleted
+                404:
+                    description: Not Found. A FmcPhone with the given {fmcId} was not found
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   iFMC
+            operationId: getFmcPhone
+            summary: Fetch a FmcPhone
+            description: Fetch the FmcPhone with the given {fmcId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fmcId
+                in: path
+                description: Id of the FmcPhone that will be fetched
+                required: true
+                type: string
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK. Returning the FmcPhone object with the given {fmcId}
+                    schema:
+                        $ref: '#/definitions/FmcPhone'
+                404:
+                    description: Not Found. A FmcPhone with the given {fmcId} was not found
+                    schema:
+                        $ref: '#/definitions/FmcPhone'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   iFMC
+            operationId: putFmcPhone
+            summary: Update a FmcPhone
+            description: Update the FmcPhone with the given {fmcId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fmcId
+                in: path
+                description: Id of the FmcPhone that will be updated
+                required: true
+                type: string
+            -   name: fmcPhone
+                in: body
+                description: FmcPhone-Object with updated values that should be applied
+                required: true
+                schema:
+                    $ref: '#/definitions/FmcPhone'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK. The FmcPhone with the given {fmcId} has successfully been updated
+                404:
+                    description: Not Found. A FmcPhone with the given {fmcId} was not found
+                    schema:
+                        $ref: '#/definitions/FmcPhone'
+                500:
+                    description: Unexpected error.
+    /fmcPhones:
+        get:
+            tags:
+                -   iFMC
+            operationId: getFmcPhones
+            summary: Retrieve a list of FmcPhones
+            description: Retrieve a list of STARFACE IFMC phones for the current user.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: A list of available FmcPhones
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/FmcPhone'
+                500:
+                    description: Unexpected error.
+        post:
+            tags:
+                -   iFMC
+            operationId: postFmcPhone
+            summary: Create a new FmcPhone
+            description: Create a new FmcPhone
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: fmcPhone
+                in: body
+                description: FmcPhone object to add
+                required: true
+                schema:
+                    $ref: '#/definitions/FmcPhone'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+                required: false
+                type: string
+            responses:
+                201:
+                    description: The FmcPhone has successfully been created
+                500:
+                    description: Unexpected error.
+    /contacts/{contactId}:
+        delete:
+            tags:
+                -   Contacts
+            operationId: deleteContact
+            summary: Delete a contact
+            description: Delete the contact with the given {contactId} from the addressbook
+            parameters:
+            -   name: contactId
+                in: path
+                description: id of the contact
+                required: true
+                type: string
+            responses:
+                204:
+                    description: contact successfully deleted response
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Contacts
+            operationId: getContact
+            summary: Fetch a contact
+            description: Fetch the contact with the given {contactId} from the addressbook
+            parameters:
+            -   name: contactId
+                in: path
+                description: id of the contact
+                required: true
+                type: string
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        $ref: '#/definitions/Contact'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Contacts
+            operationId: putContact
+            summary: Update a contact
+            description: Updates the contact with the given {contactId} from the provided payload
+            parameters:
+            -   name: contactId
+                in: path
+                description: id of the contact
+                required: true
+                type: string
+            -   name: contact
+                in: body
+                description: updated contact
+                required: true
+                schema:
+                    $ref: '#/definitions/Contact'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK
+                500:
+                    description: Unexpected error.
+    /contacts/tags/{tagId}:
+        delete:
+            tags:
+                -   Contacts
+            operationId: deleteTag
+            summary: Delete a tag
+            description: Delete the tag with the given {tagId} from the addressbook
+            parameters:
+            -   name: tagId
+                in: path
+                description: id of the Tag
+                required: true
+                type: string
+            responses:
+                204:
+                    description: tag successfully deleted response
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Contacts
+            operationId: getTag
+            summary: Fetch a tag
+            description: Fetch the tag with the given {tagId} from the addressbook
+            parameters:
+            -   name: tagId
+                in: path
+                description: id of the Tag
+                required: true
+                type: string
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        $ref: '#/definitions/Tag'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Contacts
+            operationId: putTag
+            summary: Update a tag
+            description: Updates the tag with the given {tagId} from the addressbook
+            parameters:
+            -   name: tagId
+                in: path
+                description: id of the Tag
+                required: true
+                type: string
+            -   name: tag
+                in: body
+                description: updated tag
+                required: true
+                schema:
+                    $ref: '#/definitions/Tag'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                204:
+                    description: OK
+                500:
+                    description: Unexpected error.
+    /contacts:
+        get:
+            tags:
+                -   Contacts
+            operationId: getContactList
+            summary: Retrieve a list of contacts
+            description: Retrieve a list of contacts this user can access.
+            parameters:
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            -   name: tags
+                in: query
+                description: comma seperated list of tags to filter for
+                required: false
+                type: array
+                items:
+                    type: string
+            -   name: searchTerms
+                in: query
+                description: the string to search for ... to be defined
+                required: false
+                type: string
+            -   name: page
+                in: query
+                description: The page number for this request
+
+                required: false
+                type: integer
+            -   name: pagesize
+                in: query
+                description: The page size to use. Default is 20
+
+                required: false
+                type: integer
+            -   name: sort
+                in: query
+                description: The fieldname to sort for
+
+                required: false
+                type: string
+            -   name: sortdirection
+                in: query
+                description: The fieldname to order for
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        $ref: '#/definitions/ContactList'
+                500:
+                    description: Unexpected error.
+        post:
+            tags:
+                -   Contacts
+            operationId: postContact
+            summary: Create a new contact
+            description: Create a new contact
+            parameters:
+            -   name: contact
+                in: body
+                description: user to add to the system
+                required: true
+                schema:
+                    $ref: '#/definitions/Contact'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                201:
+                    description: the created contact
+                    schema:
+                        $ref: '#/definitions/Contact'
+                500:
+                    description: Unexpected error.
+    /contacts/scheme:
+        get:
+            tags:
+                -   Contacts
+            operationId: getScheme
+            summary: Get the Contact-Scheme
+            description: Get the Contact-Scheme
+            parameters:
+            -   name: lang
+                in: query
+                description: Language identifiers as specified by RFC 3066 for i18nDisplayName
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        $ref: '#/definitions/ContactsScheme'
+                500:
+                    description: Unexpected error.
+    /contacts/tags:
+        get:
+            tags:
+                -   Contacts
+            operationId: getTagList
+            summary: Retrieve a list of tags
+            description: Retrieve a list of tags this user can access.
+            parameters:
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            -   name: page
+                in: query
+                description: The page number for this request
+
+                required: false
+                type: integer
+            -   name: pagesize
+                in: query
+                description: The page size to use. Default is 20
+
+                required: false
+                type: integer
+            -   name: sort
+                in: query
+                description: The fieldname to sort for
+
+                required: false
+                type: string
+            -   name: sortdirection
+                in: query
+                description: The fieldname to order for
+
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Tag'
+                500:
+                    description: Unexpected error.
+        post:
+            tags:
+                -   Contacts
+            operationId: postTag
+            summary: Create a new tag
+            description: Create a new tag
+            parameters:
+            -   name: tag
+                in: body
+                description: tag to add to the system
+                required: true
+                schema:
+                    $ref: '#/definitions/Tag'
+            -   name: userId
+                in: query
+                description: Perform an operation on behalf of another user. This requires administrative privileges.
+
+                required: false
+                type: string
+            responses:
+                201:
+                    description: the created tag
+                    schema:
+                        $ref: '#/definitions/Tag'
+                500:
+                    description: Unexpected error.
+    /callservices/{serviceId}:
+        get:
+            tags:
+                -   Call Services
+            operationId: getCallService
+            summary: Fetch a CallService
+            description: Fetch the CallService with the given {serviceId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: serviceId
+                in: path
+                description: Id of the CallService that will be fetched
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. Returning the CallService object with the given {serviceId}
+                    schema:
+                        $ref: '#/definitions/CallService'
+                404:
+                    description: Not Found. A CallService with the given {serviceId} was not found
+                    schema:
+                        $ref: '#/definitions/CallService'
+                500:
+                    description: Unexpected error.
+    /callservices:
+        get:
+            tags:
+                -   Call Services
+            operationId: getCallServices
+            summary: Retrive a list of all available call services
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: type
+                in: query
+                description: filter for a call service type. If none or an invalid type is provided the type filter will default to FOR_USER_ACCOUNTS
+                required: false
+                type: string
+            responses:
+                200:
+                    description: A list of available CallServices
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/CallService'
+                500:
+                    description: Unexpected error.
+    /voicemailboxes:
+        post:
+            tags:
+                -   Voicemail Boxes
+            operationId: createVoicemailbox
+            summary: Create a new voicemailbox
+            description: Create a STARFACE voicemailbox.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: voicemailbox
+                in: body
+                description: Voicemailbox to save.
+                required: true
+                schema:
+                    $ref: '#/definitions/Voicemailbox'
+            responses:
+                204:
+                    description: OK. Voicemailbox created.
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Voicemail Boxes
+            operationId: getVoicemailboxes
+            summary: Retrieve a list of voicemailboxes
+            description: Retrieve a list of STARFACE voicemailboxes the current user can access.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: searchTerm
+                in: query
+                description: The searchTerm to query voicemailboxes.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK. A list of accessable voicemailboxes
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/VoicemailboxListItem'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Voicemail Boxes
+            operationId: saveVoicemailbox
+            summary: Save a voicemailbox
+            description: Save a STARFACE voicemailbox.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: voicemailbox
+                in: body
+                description: Voicemailbox to save.
+                required: true
+                schema:
+                    $ref: '#/definitions/Voicemailbox'
+            responses:
+                204:
+                    description: OK. Voicemailbox saved.
+                500:
+                    description: Unexpected error.
+    /voicemailboxes/{voicemailboxid}:
+        delete:
+            tags:
+                -   Voicemail Boxes
+            operationId: deleteVoicemailbox
+            summary: Delete a voicemailbox with id
+            description: Delete a STARFACE voicemailbox.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: voicemailboxid
+                in: path
+                description: Id of the voicemailbox.
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: OK. Voicemailbox deleted
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Voicemail Boxes
+            operationId: getVoicemailbox
+            summary: Retrieve a voicemailbox with id
+            description: Retrieve a list of STARFACE voicemailboxes the current user can access.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: voicemailboxid
+                in: path
+                description: Id of the voicemailbox.
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. A voicemailbox with id.
+                    schema:
+                        $ref: '#/definitions/Voicemailbox'
+                500:
+                    description: Unexpected error.
+    /groups:
+        post:
+            tags:
+                -   Groups
+            operationId: createGroup
+            summary: Create a new group
+            description: Create a STARFACE group.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: group
+                in: body
+                description: Group to save.
+                required: true
+                schema:
+                    $ref: '#/definitions/Group'
+            responses:
+                204:
+                    description: OK. Group created.
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Groups
+            operationId: getGroups
+            summary: Retrieve a list of groups
+            description: Retrieve a list of STARFACE groups.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: searchTerm
+                in: query
+                description: The searchTerm to query groups.
+                required: false
+                type: string
+            responses:
+                200:
+                    description: OK. A list of accessable groups
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/GroupListItem'
+                500:
+                    description: Unexpected error.
+        put:
+            tags:
+                -   Groups
+            operationId: saveGroup
+            summary: Save a group
+            description: Save a STARFACE group.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: group
+                in: body
+                description: Group to save.
+                required: true
+                schema:
+                    $ref: '#/definitions/Group'
+            responses:
+                204:
+                    description: OK. Group saved.
+                500:
+                    description: Unexpected error.
+    /groups/{groupid}:
+        delete:
+            tags:
+                -   Groups
+            operationId: deleteGroup
+            summary: Delete a group with id
+            description: Delete a STARFACE group.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: groupid
+                in: path
+                description: Id of the group.
+                required: true
+                type: integer
+            responses:
+                204:
+                    description: OK. Group deleted
+                500:
+                    description: Unexpected error.
+        get:
+            tags:
+                -   Groups
+            operationId: getGroup
+            summary: Retrieve a group with id
+            description: Retrieve a STARFACE group.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: groupid
+                in: path
+                description: Id of the group.
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. A group with id.
+                    schema:
+                        $ref: '#/definitions/Group'
+                500:
+                    description: Unexpected error.
+    /permissions:
+        get:
+            tags:
+                -   Permissions
+            operationId: getPermissions
+            summary: Retrieve a list of permissions
+            description: Retrieve a list of all existing STARFACE permissions.
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            responses:
+                200:
+                    description: OK. A list of permissions
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PermissionInfo'
+                500:
+                    description: Unexpected error
+    /permissions/users/{userId}:
+        get:
+            tags:
+                -   Users
+                -   Permissions
+            operationId: getUserPermissions
+            summary: Retrieve a list of permissions for user
+            description: Retrieve a list of STARFACE permissions for user with the given {userId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User which persissions will be fetched
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. A list of permissions for user with the given {userId}
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/PermissionInfo'
+                404:
+                    description: Not Found. A User with the given {userId} was not found
+                500:
+                    description: Unexpected error
+        put:
+            tags:
+                -   Users
+                -   Permissions
+            operationId: putUserPermissions
+            summary: Update a user's permissions
+            description: Set the STARFACE user's permissions with the given {userId}. Permissions user had before and not specified in this query will be removed
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: userId
+                in: path
+                description: Id of the User that will be updated
+                required: true
+                type: integer
+            -   name: permissions
+                in: body
+                description: Array of permission Ids that should be granted to user
+                required: true
+                schema:
+                    type: array
+                    items:
+                        type: integer
+            responses:
+                200:
+                    description: Ok. The permissions for user with the given {userId} has successfully been updated
+                404:
+                    description: Not Found. An User with the given {userId} was not found
+                500:
+                    description: Unexpected error
+    /permissions/{permissionId}/users:
+        get:
+            tags:
+                -   Users
+                -   Permissions
+            operationId: getUsersWithPermission
+            summary: Retrieve users with specified permission
+            description: Retrieve users which have permission with the given {permissionId}
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: permissionId
+                in: path
+                description: Id of the Permission to search
+                required: true
+                type: integer
+            responses:
+                200:
+                    description: OK. Returning the array of users with the given permission
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/User'
+                404:
+                    description: Not Found. A Permission with the given {permissionId} was not found
+                500:
+                    description: Unexpected error
+        put:
+            tags:
+                -   Users
+                -   Permissions
+            operationId: updatePermissionForUsers
+            summary: Update permission for users
+            description: Update permission with the given {permissionId} for users specified in usersList. Permission will be granted if "granted" parameter established to true and removed if false
+            consumes:
+            - application/json
+            produces:
+            - application/json
+            parameters:
+            -   name: usersList
+                in: body
+                description: List of user ids for updating permission with given {permissionId}
+                required: true
+                schema:
+                    type: array
+                    items:
+                        type: integer
+            -   name: permissionId
+                in: path
+                description: Id of the Permission
+                required: true
+                type: integer
+            -   name: granted
+                in: query
+                description: Boolean parameter that define will be permission granted or removed
+                required: true
+                type: boolean
+            responses:
+                200:
+                    description: Ok. Permissions for the User with the given {userId} has successfully been updated
+                404:
+                    description: Not Found. A Permission with the given {permissionId} was not found. Or a User with the given {userId} was not found
+                500:
+                    description: Unexpected error
+definitions:
+    Account:
+        description: A basic representation of a STARFACE account.
+        properties:
+            accountId:
+                description: the accountId of the account
+                type: integer
+            displayInformation:
+                description: the displayInformation of the account
+                type: string
+            federationname:
+                description: the federationname of the account
+                type: string
+            firstname:
+                description: the firstname of the account
+                type: string
+            lastname:
+                description: the lastname of the account
+                type: string
+            local:
+                description: the account is not an federation account
+                type: boolean
+            primaryInternalPhoneNumber:
+                description: the primary internal phone number of the account
+                type: string
+            type:
+                description: the type of this account
+                type: string
+                enum:
+                - USER
+                - GROUP
+                - REMOTE_USER
+                - REMOTE_GROUP
+        required:
+            - accountId
+            - displayInformation
+            - federationname
+            - firstname
+            - lastname
+            - local
+            - primaryInternalPhoneNumber
+            - type
+    AssignableNumber:
+        description: A representation of a STARFACE assignableNumber
+        properties:
+            assigned:
+                description: the assigned option of the assignableNumber
+                type: boolean
+            countryCode:
+                description: the countryCode of the assignableNumber
+                type: string
+            exitCode:
+                description: the exitCode of the assignableNumber
+                type: string
+            extension:
+                description: the extension of the assignableNumber
+                type: string
+            id:
+                description: the id of the assignableNumber
+                type: integer
+            intern:
+                description: the intern option of the assignableNumber
+                type: boolean
+            localAreaCode:
+                description: the localAreaCode of the assignableNumber
+                type: string
+    AssignableUser:
+        description: A representation of a STARFACE assignableUser
+        properties:
+            assigned:
+                description: the assigned option of the assignableUser
+                type: boolean
+            firstname:
+                description: the firstname of the assignableUser
+                type: string
+            id:
+                description: the id of the assignableUser
+                type: integer
+            lastname:
+                description: the lastname of the assignableUser
+                type: string
+    Attribute:
+        description: Key for String localization. The attribute name is displayed as-is for USER_DEFINED
+        properties:
+            additionalValues:
+                description: Additional values for this Attribute, for example SHORT_DIAL
+
+                type: object
+                additionalProperties:
+                    type: string
+            displayKey:
+                type: string
+                enum:
+                - NAME
+                - SURNAME
+                - SALUTATION
+                - TITLE
+                - EMAIL
+                - COUNTRY
+                - CITY
+                - STATE
+                - POSTAL_CODE
+                - STREET
+                - URL
+                - COMPANY
+                - MESSENGER
+                - BIRTHDAY
+                - NOTE
+                - JOB_TITLE
+                - PHONE_NUMBER
+                - PRIVATE_PHONE_NUMBER
+                - OFFICE_PHONE_NUMBER
+                - MOBILE_PHONE_NUMBER
+                - FAX_NUMBER
+                - DESCRIPTION
+                - USER_DEFINED
+            i18nDisplayName:
+                description: Key value localized by the server in the user's language
+
+                type: string
+            name:
+                type: string
+            value:
+                type: string
+        required:
+            - displayKey
+            - name
+    AuthToken:
+        properties:
+            token:
+                type: string
+        required:
+            - token
+    Block:
+        description: Collection of attributes in blocks
+        properties:
+            attributes:
+                type: array
+                items:
+                    $ref: '#/definitions/Attribute'
+            name:
+                type: string
+            resourceKey:
+                type: string
+        required:
+            - attributes
+    CallService:
+        description: Representation of a call service
+        properties:
+            label:
+                description: the label of the CallService that is used in the UI
+                type: string
+            serviceId:
+                description: the Id of the CallService
+                type: integer
+            serviceName:
+                description: the name of the CallService
+                type: string
+        required:
+            - serviceId
+    ConferenceConfiguration:
+        description: A representation of STARFACE conference configuration
+        properties:
+            eMailBody:
+                type: string
+            eMailSubject:
+                type: string
+            externalNumberId:
+                type: integer
+            internalNumberId:
+                type: integer
+            language:
+                type: string
+                enum:
+                - en
+                - de
+                - es
+                - fr
+                - nl
+                - pl
+                - sk
+            serverAddress:
+                type: string
+            variables:
+                type: array
+                items:
+                    $ref: '#/definitions/ConferenceConfigurationMailBodyVariable'
+        required:
+            - eMailBody
+            - eMailSubject
+            - language
+            - variables
+    ConferenceConfigurationMailBodyVariable:
+        description: A representation of STARFACE managed conference mail body variable
+        properties:
+            name:
+                type: string
+            placeholder:
+                type: string
+        required:
+            - name
+            - placeholder
+    ConferenceConfigurationTexts:
+        description: A representation of STARFACE managed configuration email subject and email body
+        properties:
+            eMailBody:
+                type: string
+            eMailSubject:
+                type: string
+        required:
+            - eMailBody
+            - eMailSubject
+    Contact:
+        description: contact information
+        properties:
+            accountId:
+                type: integer
+            blocks:
+                type: array
+                items:
+                    $ref: '#/definitions/Block'
+            editable:
+                type: boolean
+            id:
+                type: string
+            jabberId:
+                type: string
+            primaryExternalNumber:
+                type: string
+            primaryInternalNumber:
+                type: string
+            tags:
+                type: array
+                items:
+                    $ref: '#/definitions/Tag'
+        required:
+            - blocks
+            - editable
+            - tags
+    ContactList:
+        description: Bandwidth-saving return object for lists of contacts. It returns the contact schema for the summary block and the phone numbers block. The ContactSummary data can be interpreted using the contact scheme.
+        properties:
+            contacts:
+                type: array
+                items:
+                    $ref: '#/definitions/ContactSummary'
+            metadata:
+                $ref: '#/definitions/RequestMetadata'
+            phoneNumbersBlockSchema:
+                $ref: '#/definitions/Block'
+            summaryBlockSchema:
+                $ref: '#/definitions/Block'
+        required:
+            - contacts
+    ContactSummary:
+        description: Compact summary of a contact without schema information
+        properties:
+            additionalValues:
+                description: Additional values for the ContactSummary, for example INTERNALPHONE, EXTERNALPHONE, AVATAR
+                type: object
+                additionalProperties:
+                    type: string
+            id:
+                type: string
+            phoneNumberValues:
+                type: array
+                items:
+                    type: string
+            summaryValues:
+                type: array
+                items:
+                    type: string
+        required:
+            - additionalValues
+            - id
+            - phoneNumberValues
+            - summaryValues
+    ContactsScheme:
+        properties:
+            detailBlocks:
+                type: array
+                items:
+                    $ref: '#/definitions/Block'
+            phoneNumbersBlock:
+                $ref: '#/definitions/Block'
+            summaryBlock:
+                $ref: '#/definitions/Block'
+        required:
+            - detailBlocks
+    EditFunctionKey:
+        description: A representation of a EditFunctionKey Form
+        properties:
+            editFunctionKeyBusyLampField:
+                $ref: '#/definitions/EditFunctionKeyBusyLampField'
+            editFunctionKeyCallList:
+                $ref: '#/definitions/EditFunctionKeyCallList'
+            editFunctionKeyCcbs:
+                $ref: '#/definitions/EditFunctionKeyCcbs'
+            editFunctionKeyDnd:
+                $ref: '#/definitions/EditFunctionKeyDnd'
+            editFunctionKeyDtmf:
+                $ref: '#/definitions/EditFunctionKeyDtmf'
+            editFunctionKeyForwardCall:
+                $ref: '#/definitions/EditFunctionKeyForwardCall'
+            editFunctionKeyForwardNumberUnconditional:
+                $ref: '#/definitions/EditFunctionKeyForwardNumberUnconditional'
+            editFunctionKeyGenericUrl:
+                $ref: '#/definitions/EditFunctionKeyGenericUrl'
+            editFunctionKeyGroupLogin:
+                $ref: '#/definitions/EditFunctionKeyGroupLogin'
+            editFunctionKeyModuleActivation:
+                $ref: '#/definitions/EditFunctionKeyModuleActivation'
+            editFunctionKeyParkAndOrbit:
+                $ref: '#/definitions/EditFunctionKeyParkAndOrbit'
+            editFunctionKeyPhoneContact:
+                $ref: '#/definitions/EditFunctionKeyPhoneContact'
+            editFunctionKeyQuickDial:
+                $ref: '#/definitions/EditFunctionKeyQuickDial'
+            editFunctionKeySeperator:
+                $ref: '#/definitions/EditFunctionKeySeperator'
+            editFunctionKeySignalNumber:
+                $ref: '#/definitions/EditFunctionKeySignalNumber'
+    EditFunctionKeyBusyLampField:
+        description: A representation of a EditFunctionKeyBusyLampField Form
+        properties:
+            availableAccounts:
+                description: the available accounts of the FunctionKey
+                type: array
+                items:
+                    $ref: '#/definitions/Account'
+            blfAccountId:
+                description: accountId of busy lamp field
+                type: integer
+            blfDisplayInformation:
+                description: the display information of the blf accountid
+                type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+            number:
+                description: the user telephonenumber of the FunctionKey
+                type: string
+        required:
+            - blfAccountId
+            - blfDisplayInformation
+            - name
+            - number
+    EditFunctionKeyCallList:
+        description: A representation of a EditFunctionKeyCallList Form
+        properties:
+            callListRequest:
+                description: the call list type of the FunctionKey
+                type: string
+                enum:
+                - INCOMING
+                - OUTGOING
+                - MISSED
+            callListRequests:
+                description: list of possible callListRequests
+                type: array
+                items:
+                    type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - callListRequest
+            - callListRequests
+            - name
+    EditFunctionKeyCcbs:
+        description: A representation of a EditFunctionKeyCcbs Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - name
+    EditFunctionKeyDnd:
+        description: A representation of a EditFunctionKeyDnd Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - name
+    EditFunctionKeyDtmf:
+        description: A representation of a EditFunctionKeyDtmf Form
+        properties:
+            dtmf:
+                description: the dtmf of the FunctionKey
+                type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - dtmf
+            - name
+    EditFunctionKeyForwardCall:
+        description: A representation of a EditFunctionKeyForwardCall Form
+        properties:
+            forwardType:
+                description: the forward type always busy timeout
+                type: string
+                enum:
+                - ALWAYS
+                - BUSY
+                - TIMEOUT
+            forwardTypes:
+                description: the name of the FunctionKey
+                type: array
+                items:
+                    type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - forwardType
+            - forwardTypes
+            - name
+    EditFunctionKeyForwardNumberUnconditional:
+        description: A representation of a EditFunctionKeyForwardNumberUnconditional Form
+        properties:
+            editFunctionKeyFnuNumberSetting:
+                type: array
+                items:
+                    $ref: '#/definitions/EditFunctionKeyForwardNumberUnconditionalNumberSetting'
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - editFunctionKeyFnuNumberSetting
+            - name
+    EditFunctionKeyForwardNumberUnconditionalNumberSetting:
+        description: A representation of a EditFunctionKeyForwardNumberUnconditionalNumberSetting Form
+        properties:
+            activated:
+                description: is number setting activated
+                type: boolean
+            group:
+                description: is number setting a group
+                type: boolean
+            number:
+                description: the number of the setting
+                type: string
+            numberId:
+                description: the numberId of the setting
+                type: integer
+        required:
+            - activated
+            - group
+            - number
+            - numberId
+    EditFunctionKeyGenericUrl:
+        description: A representation of a EditFunctionKeyGenericUrl Form
+        properties:
+            genericURL:
+                description: the url of the FunctionKey
+                type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - genericURL
+            - name
+    EditFunctionKeyGroupLogin:
+        description: A representation of a EditFunctionKeyGroupLogin Form
+        properties:
+            editFunctionKeyGlGroupSettings:
+                description: the EditFunctionKeyGlGroupSettings of the FunctionKey
+                type: array
+                items:
+                    $ref: '#/definitions/EditFunctionKeyGroupLoginGroupSettings'
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - editFunctionKeyGlGroupSettings
+            - name
+    EditFunctionKeyGroupLoginGroupSettings:
+        description: A representation of a EditFunctionKeyGroupLoginGroupSettings Form
+        properties:
+            activated:
+                description: is number setting activated
+                type: boolean
+            groupId:
+                description: the groupId
+                type: integer
+            groupname:
+                description: the groupname
+                type: string
+        required:
+            - activated
+            - groupId
+            - groupname
+    EditFunctionKeyModuleActivation:
+        description: A representation of a EditFunctionKeyModuleActivation Form
+        properties:
+            editFunctionKeyMaModuleSettings:
+                description: the editFunctionKeyMaModuleSettings of the FunctionKey
+                type: array
+                items:
+                    $ref: '#/definitions/EditFunctionKeyModuleActivationModuleSettings'
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - editFunctionKeyMaModuleSettings
+            - name
+    EditFunctionKeyModuleActivationModuleSettings:
+        description: A representation of a EditFunctionKeyModuleActivationModuleSettings Form
+        properties:
+            activated:
+                description: is setting activated
+                type: boolean
+            moduleId:
+                description: the moduleId of the FunctionKey
+                type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - activated
+            - moduleId
+            - name
+    EditFunctionKeyParkAndOrbit:
+        description: A representation of a EditFunctionKeyParkAndOrbit Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+            parkAndOrbitNumber:
+                description: the parkAndOrbitNumber of the FunctionKey
+                type: string
+            parkAndOrbitNumbers:
+                description: the list of park and orbit numbers
+                type: array
+                items:
+                    type: string
+        required:
+            - name
+            - parkAndOrbitNumber
+            - parkAndOrbitNumbers
+    EditFunctionKeyPhoneContact:
+        description: A representation of a EditFunctionKeyPhoneContact Form
+        properties:
+            addressbookRequest:
+                description: the addressbookRequest of the FunctionKey
+                type: string
+                enum:
+                - CONTACTLIST
+                - CONTACTSEARCH
+            addressbookRequests:
+                description: the possible request types of the adressbook
+                type: array
+                items:
+                    type: string
+            folders:
+                description: the folders of the FunctionKey
+                type: array
+                items:
+                    type: string
+            name:
+                description: the name of the FunctionKey
+                type: string
+            selectedFolder:
+                description: the selectedFolder of the FunctionKey
+                type: string
+        required:
+            - addressbookRequest
+            - addressbookRequests
+            - folders
+            - name
+            - selectedFolder
+    EditFunctionKeyQuickDial:
+        description: A representation of a EditFunctionKeyQuickDial Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+            number:
+                description: the user telephonenumber of the FunctionKey
+                type: string
+        required:
+            - name
+            - number
+    EditFunctionKeySeperator:
+        description: A representation of a EditFunctionKeySeperator Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+        required:
+            - name
+    EditFunctionKeySignalNumber:
+        description: A representation of a EditFunctionKeySignalNumber Form
+        properties:
+            name:
+                description: the name of the FunctionKey
+                type: string
+            phoneNumber:
+                description: the phoneNumber of the FunctionKey
+                type: string
+            phoneNumberId:
+                description: the phoneNumberId of the FunctionKey
+                type: integer
+            possibleSignalnumbers:
+                description: the possible signal phonenumbers
+                type: array
+                items:
+                    $ref: '#/definitions/PhoneNumber'
+        required:
+            - name
+            - phoneNumber
+            - phoneNumberId
+            - possibleSignalnumbers
+    FmcPhone:
+        description: A representation of an FmcPhone
+        properties:
+            active:
+                description: whether this FmcPhone is activated or deactivated
+                type: boolean
+            confirm:
+                description: whether the user must confirm a call with the FmcPhone
+                type: boolean
+            delay:
+                description: defines the delay before the FmcPhone is called
+                type: integer
+            fmcSchedule:
+                description: List of TimeFrames that define when this FmcPhone is called
+                type: array
+                items:
+                    $ref: '#/definitions/TimeFrame'
+            id:
+                description: the Id of the FmcPhone
+                type: string
+            number:
+                description: the number that will be called
+                type: string
+            telephoneId:
+                description: the Id of the corresponding telephone
+                type: string
+        required:
+            - active
+            - confirm
+            - delay
+            - fmcSchedule
+            - id
+            - number
+    FunctionKey:
+        description: A representation of a FunctionKey
+        properties:
+            accountId:
+                description: the accountId of the FunctionKey
+                type: string
+            activateModuleIds:
+                description: Modules to activate
+                type: array
+                items:
+                    type: string
+            addressBookFolderName:
+                description: AddressBookFolderName
+                type: string
+            addressbookRequest:
+                description: Type of AddressbookRequest
+                type: string
+                enum:
+                - CONTACTLIST
+                - CONTACTSEARCH
+            blfAccountId:
+                description: AccountId of busy lamp field
+                type: integer
+            callListRequest:
+                description: Type of requested list
+                type: string
+                enum:
+                - INCOMING
+                - OUTGOING
+                - MISSED
+            directCallTargetnumber:
+                description: Number to call
+                type: string
+            displayNumberId:
+                description: Displaynumberid to signal
+                type: integer
+            dtmf:
+                description: Dtmf to send
+                type: string
+            forwardType:
+                description: Type of forward
+                type: string
+                enum:
+                - ALWAYS
+                - BUSY
+                - TIMEOUT
+            functionKeyType:
+                description: The type of the FunctionKey determining the concrete FunctionKey implementation
+                type: string
+                enum:
+                - SIGNALNUMBER
+                - SEPARATOR
+                - QUICKDIAL
+                - PHONEGENERICURL
+                - PHONEDTMF
+                - ADDRESSBOOK
+                - PHONECALLLIST
+                - PARKANDORBIT
+                - MODULEACTIVATION
+                - GROUPLOGIN
+                - FORWARDNUMBER
+                - FORWARD
+                - DONOTDISTURB
+                - COMPLETIONOFCALLSTOBUSYSUBSCRIBER
+                - BUSYLAMPFIELD
+            genericURL:
+                description: generic URL to send
+                type: string
+            groupIds:
+                description: Groupids to activate or deactivate
+                type: array
+                items:
+                    type: integer
+            id:
+                description: the Id of the FunctionKey
+                type: string
+            name:
+                description: the display name of the FunctionKey
+                type: string
+            poNumber:
+                description: Number of park and orbit position
+                type: string
+            position:
+                description: the position of the FunctionKey wthin its FunctionKeySet
+                type: integer
+            redirectNumberIds:
+                description: NumberIds to redirect
+                type: array
+                items:
+                    type: integer
+        required:
+            - accountId
+            - functionKeyType
+            - id
+            - name
+            - position
+    FunctionKeySet:
+        description: An ordered set of FunctionKeys that can be used for changing the order of FunctionKeys
+        properties:
+            id:
+                description: the Id of the FunctionKeySet
+                type: string
+            keyOrder:
+                description: List of Ids of contained FunctionKeys. The ordering of this List defines the positioning of the FunctionKeys.
+                type: array
+                items:
+                    type: string
+            name:
+                description: the name of the FunctionKeySet
+                type: string
+        required:
+            - id
+            - keyOrder
+            - name
+    FunctionKeySetError:
+        description: Error information about a function key that is saved
+        properties:
+            errorField:
+                description: the wrong filled field
+                type: string
+            functionKeyErrorType:
+                description: the error type ( DUPLICATE or CORRUPT )
+                type: string
+                enum:
+                - DUPLICATE
+                - CORRUPT
+            position:
+                description: the keyposition
+                type: integer
+        required:
+            - errorField
+            - functionKeyErrorType
+            - position
+    Group:
+        description: A representation of a STARFACE group
+        properties:
+            assignableNumbers:
+                description: the assignableNumbers of the group
+                type: array
+                items:
+                    $ref: '#/definitions/AssignableNumber'
+            assignableUsers:
+                description: the assignableUsers of the group
+                type: array
+                items:
+                    $ref: '#/definitions/AssignableUser'
+            chatGroup:
+                description: the chatGroup option of the group
+                type: boolean
+            groupId:
+                description: the groupId of the group
+                type: string
+            id:
+                description: the id of the group
+                type: integer
+            name:
+                description: the name of the group
+                type: string
+            voicemail:
+                description: the voicemail option of the group
+                type: boolean
+    GroupListItem:
+        description: A representation of a STARFACE group list item
+        properties:
+            groupexternalnumber:
+                description: the external number of the group
+                type: string
+            groupinternalnumber:
+                description: the internal number of the group
+                type: string
+            groupname:
+                description: the name of the group
+                type: string
+            id:
+                description: the id of the group
+                type: integer
+    Login:
+        properties:
+            loginType:
+                type: string
+                enum:
+                - Internal
+                - ActiveDirectory
+            nonce:
+                type: string
+            secret:
+                type: string
+        required:
+            - loginType
+            - nonce
+    ManagedConference:
+        description: A representation of a STARFACE conference
+        properties:
+            conferenceId:
+                type: integer
+            eMailBody:
+                type: string
+            name:
+                type: string
+            occurrence:
+                type: string
+                enum:
+                - ONCE
+                - EVERYDAY
+                - EVERYWEEK
+                - EVERYMONTH
+            participants:
+                type: array
+                items:
+                    $ref: '#/definitions/ManagedConferenceParticipant'
+            startTime:
+                type: integer
+                format: int64
+        required:
+            - eMailBody
+            - name
+            - occurrence
+            - startTime
+    ManagedConferenceParticipant:
+        description: A representation of STARFACE managed conference participant
+        properties:
+            callOnStart:
+                type: boolean
+            displayName:
+                type: string
+            eMailAddress:
+                type: string
+            isModerator:
+                type: boolean
+            participantId:
+                type: integer
+            phoneNumber:
+                type: string
+            userId:
+                type: integer
+        required:
+            - callOnStart
+            - displayName
+            - isModerator
+            - phoneNumber
+            - userId
+    ManagedConferenceSummary:
+        description: A representation of STARFACE managed conference summary
+        properties:
+            conferenceId:
+                type: integer
+            isActive:
+                type: boolean
+            isReadonly:
+                type: boolean
+            isTerminated:
+                type: boolean
+            name:
+                type: string
+            startTime:
+                type: integer
+                format: int64
+        required:
+            - conferenceId
+            - isActive
+            - isReadonly
+            - isTerminated
+            - name
+            - startTime
+    NumberForPhoneAssignment:
+        description: Representation of an assignment of a PhoneNumber to a Phone.
+        properties:
+            active:
+                description: the flag that indicates whether the PhoneNumber is active for this assignment.
+                type: boolean
+            phoneNumber:
+                description: The number of the PhoneNumber
+                type: string
+            phoneNumberId:
+                description: the Id of the PhoneNumber that is assigned
+                type: integer
+        required:
+            - active
+            - phoneNumber
+            - phoneNumberId
+    PermissionInfo:
+        description: Representation of permission that can be granted to a User
+        properties:
+            description:
+                description: description of the permission
+                type: string
+            id:
+                description: Id of the permission
+                type: integer
+            permission:
+                description: name of the permission
+                type: string
+    PhoneAssignment:
+        description: Representation of an assignment from a Phone to a User
+        properties:
+            active:
+                description: the flag that indicates whether the Phone is active for the User. Inactive Phones won't ring on incoming calls.
+                type: boolean
+            isIFMC:
+                description: the flag that indicates whether the assigned Phone is a STARFACE iFMC Phone
+                type: boolean
+            phoneId:
+                description: the Id of the Phone that is assigned to the User
+                type: integer
+            phoneName:
+                description: The name of the Phone that is assigned to the User.
+                type: string
+            userId:
+                description: the Id of the User
+                type: integer
+        required:
+            - active
+            - isIFMC
+            - phoneId
+            - phoneName
+            - userId
+    PhoneConfig:
+        description: Representation of phone config options for a User
+        properties:
+            callWaiting:
+                description: the flag that indicates whether a call gets rejected if the User is currently busy
+                type: boolean
+            displayNumberId:
+                description: the Id of the PhoneNumber that is displayed when the User makes a call
+                type: integer
+            doNotDisturb:
+                description: the flag that indicates whether the user is DND and thus won't recieve calls
+                type: boolean
+            primaryPhoneId:
+                description: the Id of the primary Phone of the User
+                type: integer
+        required:
+            - callWaiting
+            - displayNumberId
+            - doNotDisturb
+            - primaryPhoneId
+    PhoneNumber:
+        description: A representation of a phone number
+        properties:
+            assignedGroupAccountId:
+                description: the id of the account this phone number is assigned to or null if it is not assigned to an account
+                type: integer
+            assignedModuleInstanceId:
+                description: the id of the module instance this phone number is assigned to or null if it is not assigned to a module
+                type: string
+            assignedServiceId:
+                description: the id of the service this phone number is assigned to or null
+                type: integer
+            assignedUserAccountId:
+                description: the id of the account this phone number is assigned to or null if it is not assigned to an account
+                type: integer
+            exitCode:
+                description: the exit code of the phone number
+                type: string
+            id:
+                description: the Id of the phone number
+                type: integer
+            localPrefix:
+                description: the local prefix of the phone number
+                type: string
+            nationalPrefix:
+                description: the national prefix of the phone number
+                type: string
+            number:
+                description: the number itself (extention)
+                type: string
+            numberBlockId:
+                description: the id of the corresponding NumberBlock
+                type: integer
+            type:
+                description: the type of the phone number
+                type: string
+                enum:
+                - INVALID
+                - INTERNAL
+                - EXTERNAL
+                - RESERVED
+                - NT
+                - DISPLAY
+                - FXO
+        required:
+            - id
+            - number
+            - type
+    PhoneNumberAssignment:
+        description: Representation of an assignment of a PhoneNumber to a User
+        properties:
+            accountId:
+                description: the Id of the Account
+                type: integer
+            phoneNumberId:
+                description: the Id of the PhoneNumber that is assigned to the User
+                type: integer
+            serviceId:
+                description: the Id of the call service rule that is used for this phone number.
+                type: integer
+        required:
+            - accountId
+            - phoneNumberId
+            - serviceId
+    PhoneNumberConfig:
+        description: Representation of phone number config options for a User
+        properties:
+            possibleSignalnumbers:
+                description: the possible signal phonenumbers
+                type: array
+                items:
+                    $ref: '#/definitions/PhoneNumber'
+            primaryExternalNumberId:
+                description: the Id of the PhoneNumber that is used as the primary external phone number
+                type: integer
+            primaryInternalNumberId:
+                description: the Id of the PhoneNumber that is used as the primary internal phone number
+                type: integer
+            signalingNumberId:
+                description: the Id of the PhoneNumber that is used as the signaling phone number
+                type: integer
+        required:
+            - possibleSignalnumbers
+            - primaryExternalNumberId
+    RedirectDestination:
+        description: Abstract base for mailbox and phonenumber destination
+        properties:
+            redirectDestinationType:
+                description: The type of the RedirectDestination determining the concrete RedirectDestination implementation
+                type: string
+                enum:
+                - MAILBOX
+                - PHONENUMBER
+        required:
+            - redirectDestinationType
+    RedirectMailboxDestination:
+        description: This RedirectDestination will redirect to the mailbox with the given mailboxId
+        properties:
+            mailboxId:
+                type: string
+            redirectDestinationType:
+                description: The type of the RedirectDestination determining the concrete RedirectDestination implementation
+                type: string
+                enum:
+                - MAILBOX
+                - PHONENUMBER
+        required:
+            - mailboxId
+            - redirectDestinationType
+    RedirectPhoneNumberDestination:
+        description: This RedirectDestination will redirect to a phoneNumber
+        properties:
+            phoneNumber:
+                type: string
+            redirectDestinationType:
+                description: The type of the RedirectDestination determining the concrete RedirectDestination implementation
+                type: string
+                enum:
+                - MAILBOX
+                - PHONENUMBER
+        required:
+            - phoneNumber
+            - redirectDestinationType
+    RedirectTrigger:
+        description: Abstract base for always, busy and timeout trigger
+        properties:
+            redirectTriggerType:
+                description: The type of the RedirectTrigger determining the concrete RedirectTrigger implementation
+                type: string
+                enum:
+                - ALWAYS
+                - BUSY
+                - TIMEOUT
+        required:
+            - redirectTriggerType
+    Redirection:
+        description: A representation of a Redirection
+        properties:
+            enabled:
+                description: Whether this Redirection is enabled or disabled
+                type: boolean
+            groupNumber:
+                description: True if the phoneNumber of this Redirection is assigned to a group, false otherwise
+                type: boolean
+            id:
+                description: The Id of the Redirection
+                type: string
+            lastMailboxDestination:
+                $ref: '#/definitions/RedirectMailboxDestination'
+            lastPhoneNumberDestination:
+                $ref: '#/definitions/RedirectPhoneNumberDestination'
+            phoneNumber:
+                description: The phoneNumber that will be handled by this Redirection
+                type: string
+            redirectDestination:
+                $ref: '#/definitions/RedirectDestination'
+            redirectTrigger:
+                $ref: '#/definitions/RedirectTrigger'
+        required:
+            - enabled
+            - id
+            - redirectDestination
+            - redirectTrigger
+    RequestMetadata:
+        properties:
+            page:
+                description: Page number
+                type: integer
+            pagesize:
+                description: Number of items per page
+                type: integer
+            sort:
+                description: Name of the property used for sorting
+                type: string
+            sortdirection:
+                description: Sort direction
+                type: string
+                enum:
+                - ASC
+                - DESC
+            totalPages:
+                description: Number of pages
+                type: integer
+        required:
+            - page
+            - pagesize
+            - sortdirection
+            - totalPages
+    Tag:
+        properties:
+            alias:
+                type: string
+            id:
+                type: string
+            name:
+                type: string
+            owner:
+                type: string
+        required:
+            - name
+    TimeFrame:
+        description: A TimeFrame defines a TimeRange in 24 hour format between 00:00 and 24:00 for each day of week
+        properties:
+            friday:
+                description: Enabled on fridays
+                type: boolean
+            monday:
+                description: Enabled on mondays
+                type: boolean
+            saturday:
+                description: Enabled on saturdays
+                type: boolean
+            sunday:
+                description: Enabled on sundays
+                type: boolean
+            thursday:
+                description: Eanabled on thursdays
+                type: boolean
+            timeBegin:
+                description: The time defining the beginning of the TimeRange (inclusive)
+                type: string
+            timeEnd:
+                description: The time defining the end of the TimeRange (inclusive)
+                type: string
+            tuesday:
+                description: Enabled on tuesdays
+                type: boolean
+            wednesday:
+                description: Enabled on wednesdays
+                type: boolean
+        required:
+            - friday
+            - monday
+            - saturday
+            - sunday
+            - thursday
+            - timeBegin
+            - timeEnd
+            - tuesday
+            - wednesday
+    User:
+        description: A representation of a STARFACE user
+        properties:
+            email:
+                description: the email address of the user
+                type: string
+            familyName:
+                description: the family name of the user
+                type: string
+            faxCallerId:
+                description: the callerId for faxes send by this user
+                type: string
+            faxCoverPage:
+                description: whether to send a cover page for faxes send by this user
+                type: boolean
+            faxEmailJournal:
+                description: whether the user recieves a email journal of send faxes
+                type: boolean
+            faxHeader:
+                description: the header for faxes send by this user
+                type: string
+            firstName:
+                description: the name of the user
+                type: string
+            id:
+                description: the Id of the user
+                type: integer
+            language:
+                description: the language of a user (default, de, en, ...)
+                type: string
+            login:
+                description: the login number for this user. The login number will be used as Jabber Id
+                type: string
+            missedCallReport:
+                description: whether the user recieves a report on missed calls
+                type: boolean
+            namespace:
+                description: the namespace defining the location of an user account
+                type: string
+            password:
+                description: defines a new password when a user is created or updated. This field will be empty when a user is fetched.
+                type: string
+            personId:
+                description: the Id of the corresponding person contact object
+                type: string
+        required:
+            - email
+            - familyName
+            - firstName
+            - language
+            - login
+    VoicemailGroup:
+        description: A representation of a STARFACE voicemailbox group
+        properties:
+            accountId:
+                description: the account id of the voicemailbox group
+                type: integer
+            name:
+                description: the name of the voicemailbox group
+                type: string
+            sendMail:
+                description: the send mail option of the voicemailbox group
+                type: boolean
+    VoicemailUser:
+        description: A representation of a STARFACE voicemailbox user
+        properties:
+            accountId:
+                description: the account id of the voicemailbox user
+                type: integer
+            name:
+                description: the name of the voicemailbox user
+                type: string
+            sendMail:
+                description: the send mail option of the voicemailbox user
+                type: boolean
+            voicemailboxName:
+                description: the voicemailbox name of the voicemailbox user
+                type: string
+    Voicemailbox:
+        description: A representation of a STARFACE voicemailbox
+        properties:
+            id:
+                description: the id of the voicemailbox
+                type: integer
+            maximumDuration:
+                description: the maximumDuration of the voicemailbox in seconds
+                type: integer
+            name:
+                description: the name of the voicemailbox
+                type: string
+            noRecord:
+                description: the record option of the voicemailbox
+                type: boolean
+            number:
+                description: the number of the voicemailbox
+                type: string
+            password:
+                description: the password of the voicemailbox
+                type: string
+            voicemailGroups:
+                description: the voicemailGroups of the voicemailbox
+                type: array
+                items:
+                    $ref: '#/definitions/VoicemailGroup'
+            voicemailUsers:
+                description: the voicemailUsers of the voicemailbox
+                type: array
+                items:
+                    $ref: '#/definitions/VoicemailUser'
+    VoicemailboxListItem:
+        description: A representation of a STARFACE voicemailbox list item
+        properties:
+            assignedgroups:
+                description: the assigned groups of the voicemailbox
+                type: array
+                items:
+                    type: string
+            assignedusers:
+                description: the assigned users of the voicemailbox
+                type: array
+                items:
+                    type: string
+            id:
+                description: the id of the voicemailbox
+                type: integer
+            mailboxnumber:
+                description: the number of the voicemailbox
+                type: string
+            voiceboxname:
+                description: the name of the voicemailbox
+                type: string
