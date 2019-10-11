@@ -13,3 +13,6 @@ configuration.json
 build/
 out/
 
+node_modules
+/javascript/package-lock.json
+/javascript/src/starface-rest-api/package-lock.json
